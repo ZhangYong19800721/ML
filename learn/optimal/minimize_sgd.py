@@ -38,7 +38,7 @@ def minimize_sgd(f,x0,p=None):
     inc_x = np.zeros(x0.shape)
     
     # 开始迭代
-    for it in range(p['max_it']):
+    for it in range(int(p['max_it'])):
         r  = p['learn_rate'] - (1 - 1/p['decay']) * p['learn_rate'] * it / p['max_it'] # 学习速度递减
         g1 = f.gradient(x1,it) # 计算梯度
         y1 = f.ffobject(x1,it) # 计算目标函数值

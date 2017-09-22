@@ -8,5 +8,6 @@ __author__ = '张勇,24452861@qq.com'
 import numpy as np
 
 def sample(x):
-    return np.rand(x.shape) < x;
+    y = np.random.random(x.shape) < x
+    return y
 
