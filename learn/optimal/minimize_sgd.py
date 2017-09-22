@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-'随机梯度下降'
+"""随机梯度下降"""
 
 __author__ = '张勇,24452861@qq.com'
 
@@ -11,6 +11,7 @@ def minimize_sgd(f,x0,p=None):
     # 参数检查
     if p == None: # 没有给出参数
         print('调用minimize_sgd函数时没有给出参数集，将使用默认参数集')
+        p = {}
         
     if not 'epsilon' in p: # 给出参数但是没有给出epsilon
         p['epsilon'] = 1e-3
@@ -34,7 +35,7 @@ def minimize_sgd(f,x0,p=None):
     
     # 初始化
     x1 = x0
-    inc_x = 0 # 参数的递增量
+    inc_x = np.zeros(x0.shape)
     
     # 开始迭代
     for it in range(p['max_it']):
@@ -46,7 +47,7 @@ def minimize_sgd(f,x0,p=None):
         if ng1 < p['epsilon']:
             break # 如果梯度足够小就结束迭代
         inc_x = p['momentum'] * inc_x - (1 - p['momentum']) * r * g1 # 向负梯度方向迭代，并使用动量参数
-        x1 = x1 + inc_x # 更新参数值
+        x1 += inc_x # 更新参数值
     
     return x1,y1
 
