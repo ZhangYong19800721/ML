@@ -75,7 +75,7 @@ class RBM(Derivable, Objectable):
         h_field_0 = sigmoid(self.__weight_v2h.dot(minibatch) + h_bias)
         h_state_0 = sample(h_field_0)
         v_field_1 = sigmoid(self.__weight_v2h.T.dot(h_state_0) + v_bias)
-        y = ((v_field_1 - minibatch) ** 2).sum() / s  # 计算在整个minibatch上的平均重建误差
+        y = ((v_field_1 - minibatch) ** 2).sum() / (d*s)  # 计算在整个minibatch上的平均重建误差
         return y
 
     def rebuild(self, x):
@@ -112,7 +112,7 @@ class RBM(Derivable, Objectable):
         return y
 
     def backward(self, y):
-        if self.__weight_h2v == None:
+        if self.__weight_h2v is None:
             x = self.__weight_v2h.T.dot(y) + np.tile(self.__visual_bias, (1, y.shape[1]))
         else:
             x = self.__weight_h2v.T.dot(y) + np.tile(self.__visual_bias, (1, y.shape[1]))
@@ -121,7 +121,7 @@ class RBM(Derivable, Objectable):
     def synchronize(self):
         self.__weight_h2v = self.__weight_v2h
 
-    def pretrain(self, data, parameters):
+    def pretrain(self, data, p=None):
         # pretrain 对权值进行预训练
         # 使用CD1快速算法对权值进行预训练
 
@@ -131,7 +131,7 @@ class RBM(Derivable, Objectable):
         wt, hb, vb = self.__weight_v2h.reshape((-1, 1)), self.__hidden_bias, self.__visual_bias
         x0 = np.vstack((wt, hb, vb))
         # 随机梯度下降
-        x, y = minimize_sgd(self, x0, parameters)
+        x, y = minimize_sgd(self, x0, p)
         # 嵌入参数
         v, h, w = self.__num_visual, self.__num_hidden, self.__num_hidden * self.__num_visual
         self.__weight_v2h = x[0:w].reshape((h, v))
@@ -168,5 +168,5 @@ if __name__ == '__main__':
     rbm.pretrain(train_images, parameters)
     train_images.shape = (D, -1)
     rebuild_images = rbm.rebuild(train_images)
-    error = np.sum((rebuild_images - train_images) ** 2) / N
+    error = np.sum((rebuild_images - train_images) ** 2) / (D*N)
     print('总体重建误差:%f' % error)
