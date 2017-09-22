@@ -1,0 +1,4 @@
+# make git to ingore the following files
+
+*.pyc
+
