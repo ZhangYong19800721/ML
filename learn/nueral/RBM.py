@@ -75,7 +75,7 @@ class RBM(Derivable, Objectable):
         h_field_0 = sigmoid(self.__weight_v2h.dot(minibatch) + h_bias)
         h_state_0 = sample(h_field_0)
         v_field_1 = sigmoid(self.__weight_v2h.T.dot(h_state_0) + v_bias)
-        y = ((v_field_1 - minibatch) ** 2).sum() / (d*s)  # 计算在整个minibatch上的平均重建误差
+        y = ((v_field_1 - minibatch) ** 2).sum() / s  # 计算在整个minibatch上的平均重建误差
         return y
 
     def rebuild(self, x):
@@ -168,5 +168,5 @@ if __name__ == '__main__':
     rbm.pretrain(train_images, parameters)
     train_images.shape = (D, -1)
     rebuild_images = rbm.rebuild(train_images)
-    error = np.sum((rebuild_images - train_images) ** 2) / (D*N)
+    error = np.sum((rebuild_images - train_images) ** 2) / N
     print('总体重建误差:%f' % error)

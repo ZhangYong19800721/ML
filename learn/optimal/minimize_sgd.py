@@ -36,6 +36,7 @@ def minimize_sgd(f, x0, p=None):
 
     # 初始化
     x1 = x0
+    y1 = f.ffobject(x1, 0)
     inc_x = np.zeros(x0.shape)
 
     # 开始迭代
