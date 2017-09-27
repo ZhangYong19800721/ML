@@ -9,12 +9,10 @@ __author__ = '张勇,24452861@qq.com'
 def gold(f, a, b, p):
     # 参数检查
     if p is None:  # 没有给出参数
-        print('调用gold函数时没有给出参数，将使用默认参数')
         p = {}
 
     if 'epsilon' not in p:  # 给出参数但是没有给出epsilon
         p['epsilon'] = 1e-6
-        print('epsilon参数，将使用默认值%f' % p['epsilon'])
 
     # 使用黄金分割法进行一维精确线搜索
     g = (5 ** 0.5 - 1) / 2

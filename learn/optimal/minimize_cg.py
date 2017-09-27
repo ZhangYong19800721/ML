@@ -49,7 +49,7 @@ def minimize_cg(f, x0, p=None):
             # 沿d1方向线搜索
         # 黄金分割法进行一维精确线搜索
         fs = singlex(f, x1, d1)  # 包装为单变量函数
-        a, b = xrange(fs, 0, 1, p['gold'])  # 确定搜索区间
+        a, b = xrange(fs, 0.0, 1.0, p['gold'])  # 确定搜索区间
         y2, lamda = gold(fs, a, b, p['gold'])
         x2 = x1 + lamda * d1
 

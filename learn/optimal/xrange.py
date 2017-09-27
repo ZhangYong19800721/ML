@@ -9,12 +9,10 @@ __author__ = '张勇,24452861@qq.com'
 def xrange(f, x0, h0, p):
     # 参数检查
     if p is None:  # 没有给出参数
-        print('调用xrange函数时没有给出参数，将使用默认参数')
         p = {}
 
     if 'epsilon' not in p:  # 给出参数但是没有给出epsilon
         p['epsilon'] = 1e-6
-        print('epsilon参数，将使用默认值%f' % p['epsilon'])
 
     f0 = f.ffobject(x0)  # 计算在x0位置的函数值
     x1 = x0 + h0  # 迭代到x1位置
@@ -22,7 +20,7 @@ def xrange(f, x0, h0, p):
     a = x0
     if f0 > f1:
         while f0 > f1:
-            h0 = 2 * h0  # 扩大步长
+            h0 = 2.0 * h0  # 扩大步长
             x1 = x0 + h0
             f1 = f.ffobject(x1)
         b = x1
