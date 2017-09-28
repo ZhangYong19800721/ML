@@ -23,6 +23,7 @@ class RBM(Derivable, Objectable):
         self.__weight_h2v = None
         self.__visual_bias = np.zeros((self.__num_visual, 1))
         self.__hidden_bias = np.zeros((self.__num_hidden, 1))
+        self.points = None
 
     def __str__(self):
         return "约束玻尔兹曼机：[%d,%d]" % (self.__num_visual, self.__num_hidden)
