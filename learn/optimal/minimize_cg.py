@@ -46,11 +46,11 @@ def minimize_cg(f, x0, p=None):
         if ng1 < p['epsilon']:  # 如果梯度模足够小，返回
             return x1, y1
 
-            # 沿d1方向线搜索
+        # 沿d1方向线搜索
         # 黄金分割法进行一维精确线搜索
         fs = singlex(f, x1, d1)  # 包装为单变量函数
         a, b = xrange(fs, 0.0, 1.0, p['gold'])  # 确定搜索区间
-        y2, lamda = gold(fs, a, b, p['gold'])
+        lamda, y2 = gold(fs, a, b, p['gold'])
         x2 = x1 + lamda * d1
 
         if (it % p['reset'] == 0 and it > 0) or (y1 <= y2):  # 到达重置点或d1方向不是一个下降方向
@@ -58,7 +58,7 @@ def minimize_cg(f, x0, p=None):
             # 黄金分割法进行一维精确线搜索
             fs = singlex(f, x1, d1)  # 包装为单变量函数
             a, b = xrange(fs, 0, 1, p['gold'])  # 确定搜索区间
-            y2, lamda = gold(fs, a, b, p['gold'])
+            lamda, y2 = gold(fs, a, b, p['gold'])
             x2 = x1 + lamda * d1
 
             g2 = f.gradient(x2)
