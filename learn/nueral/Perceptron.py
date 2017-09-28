@@ -84,34 +84,34 @@ class Perceptron(object):
             a = self.compute(minibatch)  # 输入minibatch计算网络各层的输出
             s = []  # 初始化敏感性
             s.insert(0, (a[L - 1] - minilabel).T)  # 计算顶层的敏感性
-            for z in range(L - 2, -1, -1):  # 反向传播敏感性
-                sx, wx, ax = s[0], self.w[z + 1], a[z] * (1 - a[z])
+            for l in range(L - 2, -1, -1):  # 反向传播敏感性
+                sx, wx, ax = s[0], self.w[l + 1], a[l] * (1 - a[l])
                 s.insert(0, sx.dot(wx) * ax.T)
 
             g = np.zeros((0, 1))  # 初始化梯度
-            for z in range(L):
-                hidden_num, visual_num = self.w[z].shape
-                sx = np.tile(np.reshape(s[z].T, (hidden_num, 1, S)), (1, visual_num, 1))
-                if z == 0:  # 第0层
-                    ax = np.tile(np.reshape(minibatch.T, (1, visual_num, S)), (hidden_num, 1, 1))
+            for l in range(L):
+                H, V = self.w[l].shape
+                sx = np.tile(np.reshape(s[l].T, (H, 1, S)), (1, V, 1))
+                if l == 0:  # 第0层
+                    ax = np.tile(np.reshape(minibatch.T, (1, V, S)), (H, 1, 1))
                 else:  # 其它层
-                    ax = np.tile(np.reshape(a[z - 1].T, (1, visual_num, S)), (hidden_num, 1, 1))
+                    ax = np.tile(np.reshape(a[l - 1].T, (1, V, S)), (H, 1, 1))
                 gx = (sx * ax).sum(axis=2)
-                bx = s[z].sum(axis=0)
+                bx = s[l].sum(axis=0)
                 g = np.vstack((g, np.reshape(gx, (-1, 1)), np.reshape(bx, (-1, 1))))
             return g
 
-    def ffobject(self, wb, m=None):
+    def ffobject(self, x, m=None):
         """计算目标函数（交叉熵）"""
         # 初始化
-        self.apply(wb)  # 设置权值和偏置值
+        self.apply(x)  # 设置权值和偏置值
         D, S, M = self.points.shape  # D数据维度，S样本点数，M样本批数
         L = len(self.b)  # 计算层数
 
         if m is None:  # 如果没有给出i就计算在全部训练数据上的交叉熵
             f = 0
             for m in range(M):
-                f += self.ffobject(wb, m)
+                f += self.ffobject(x, m)
         else:
             m = m % M
             minibatch = self.points[:, :, m]  # 取一个minibatch和minilabel
@@ -133,17 +133,13 @@ class Perceptron(object):
 
 if __name__ == '__main__':
     np.random.seed(1)
-    NN = 2000
-    xx = np.linspace(-2, 2, NN)
-    k = 4
-    yy = 0.5 + 0.5 * np.sin(k * np.pi * xx / 4)
-    plt.plot(xx, yy)
-    plt.show()
+    xx = 0.2 * np.ones((1,1))
+    yy = 0.8 * np.ones((1,1))
 
-    perceptron = Perceptron((1, 10, 1))
+    perceptron = Perceptron((1, 1, 1))
     perceptron.initialize()
     print(perceptron)
 
-    xx = np.reshape(xx, (1, NN, 1))
-    yy = np.reshape(yy, (1, NN, 1))
+    xx = np.reshape(xx, (1, 1, 1))
+    yy = np.reshape(yy, (1, 1, 1))
     perceptron.train(xx, yy)
