@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-'实现s形函数，f(x)=1/(1+exp(-x))'
+'实现s形函数，f(xx)=1/(1+exp(-xx))'
 
 __author__ = '张勇,24452861@qq.com'
 

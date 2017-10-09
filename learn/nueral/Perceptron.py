@@ -93,9 +93,9 @@ class Perceptron(object):
                 H, V = self.w[l].shape
                 sx = np.tile(np.reshape(s[l].T, (H, 1, S)), (1, V, 1))
                 if l == 0:  # 第0层
-                    ax = np.tile(np.reshape(minibatch.T, (1, V, S)), (H, 1, 1))
+                    ax = np.tile(np.reshape(minibatch, (1, V, S)), (H, 1, 1))
                 else:  # 其它层
-                    ax = np.tile(np.reshape(a[l - 1].T, (1, V, S)), (H, 1, 1))
+                    ax = np.tile(np.reshape(a[l - 1],  (1, V, S)), (H, 1, 1))
                 gx = (sx * ax).sum(axis=2)
                 bx = s[l].sum(axis=0)
                 g = np.vstack((g, np.reshape(gx, (-1, 1)), np.reshape(bx, (-1, 1))))
@@ -133,13 +133,30 @@ class Perceptron(object):
 
 if __name__ == '__main__':
     np.random.seed(1)
-    xx = 0.2 * np.ones((1,1))
-    yy = 0.8 * np.ones((1,1))
+    NN = 2000
+    xx = np.linspace(-2.0,2.0,NN)
+    k = 4
+    yy = 0.5 + 0.5 * np.sin(k * np.pi * xx / 4)
+    plt.figure()
+    plt.plot(xx, yy, '-g')
 
-    perceptron = Perceptron((1, 1, 1))
+    perceptron = Perceptron((1, 6, 1))
     perceptron.initialize()
     print(perceptron)
 
-    xx = np.reshape(xx, (1, 1, 1))
-    yy = np.reshape(yy, (1, 1, 1))
-    perceptron.train(xx, yy)
+    xx = np.reshape(xx, (1, NN, 1))
+    yy = np.reshape(yy, (1, NN, 1))
+
+    p = {}
+    p['max_it'] = 1e5
+    perceptron.train(xx, yy, p)
+    xx = np.reshape(xx, (1, NN))
+    yy = np.reshape(yy, (1, NN))
+    zz = perceptron.compute(xx)
+    zz = zz[1]
+
+    xx = xx.flatten()
+    zz = zz.flatten()
+    plt.plot(xx, zz, '-r')
+    plt.show()
+    print("End")
